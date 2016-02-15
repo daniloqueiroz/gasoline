@@ -1,4 +1,4 @@
-package example.url_shortner;
+package examples.url_shortner;
 
 import static gasoline.Context.*;
 import static java.lang.String.format;
@@ -7,8 +7,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import example.url_shortner.ShortnerModule.ShortUrlRequest;
-import example.url_shortner.ShortnerModule.ShortUrl;
+import examples.url_shortner.ShortnerModule;
+import examples.url_shortner.ShortnerModule.ShortUrl;
+import examples.url_shortner.ShortnerModule.ShortUrlRequest;
 import gasoline.http.StatusCode;
 import gasoline.response.Response;
 import gasoline.testing.Client;

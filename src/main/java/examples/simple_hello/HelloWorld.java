@@ -1,4 +1,4 @@
-package example.simple_hello;
+package examples.simple_hello;
 
 import static java.lang.String.format;
 

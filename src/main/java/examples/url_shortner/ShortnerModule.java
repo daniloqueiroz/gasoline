@@ -1,4 +1,4 @@
-package example.url_shortner;
+package examples.url_shortner;
 
 import static gasoline.Context.badRequest;
 import static gasoline.Context.created;
