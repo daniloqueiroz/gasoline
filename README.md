@@ -4,19 +4,14 @@
 
 Gasoline is a very simple Micro Framework for build REST APIs using Java 8.
 
-Only of the main goals of Gasoline is be as less opinionated as possible,
-so it comes with no batteries included - no configuration support, no IoC, no template support,
-Log support is build using **java.util.logging**.
+One of the main goals of Gasoline is be as less opinionated as possible
+so it comes with no batteries included - no configuration, nor IoC, nor template support 
+and Log support is build using **java.util.logging**.
 
-As it was built with REST API in mind, it only support *JSon* data, using **GSon**.
+As it was built with REST API in mind, it only support *JSon* data, using [**GSon**](https://github.com/google/gson) 
+library.
 
-Other dependencies includes **Jetty**, as HTTP/2 server. And that's all!
-
-# Application and Modules
-
-The **Application** is the entry point for a Gasoline Application. You can add your
-routes direct to the application, or you can use **Modules** to split your application
-on several small components.
+Other dependencies includes **Jetty**, as *HTTP/2* server. And that's all!
 
 # Hello World
 
@@ -52,6 +47,12 @@ on several small components.
     }
 
 See the *examples* package for more examples.
+
+# Application and Modules
+
+The **Application** is the entry point for a Gasoline Application. You can add your
+routes direct to the application, or you can use **Modules** to split your application
+on several small components.
 
 # Routes
 
@@ -114,9 +115,10 @@ Here goes a non-exhaustive list of methods provided by the **Context** class.
 
 Note that as all the methods are static, you can use static imports.
 
-
-
-
 # Async
 
+Not Supported Yet!
+
 # Server
+
+Not Supported Yet!
