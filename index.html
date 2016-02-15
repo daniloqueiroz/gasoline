@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Gasoline by daniloqueiroz</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Gasoline</h1>
+      <h2 class="project-tagline"></h2>
+      <a href="https://github.com/daniloqueiroz/gasoline" class="btn">View on GitHub</a>
+      <a href="https://github.com/daniloqueiroz/gasoline/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/daniloqueiroz/gasoline/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="gasoline" class="anchor" href="#gasoline" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Gasoline</h1>
+
+<p><a href="https://travis-ci.org/daniloqueiroz/gasoline"><img src="https://travis-ci.org/daniloqueiroz/gasoline.svg?branch=master" alt="Build Status"></a></p>
+
+<p>Gasoline is a very simple Micro Framework for build REST APIs using Java 8.</p>
+
+<p>Only of the main goals of Gasoline is be as less opinionated as possible,
+so it comes with no batteries included - no configuration support, no IoC, no template support,
+Log support is build using <strong>java.util.logging</strong>.</p>
+
+<p>As it was built with REST API in mind, it only support <em>JSon</em> data, using <strong>GSon</strong>.</p>
+
+<p>Other dependencies includes <strong>Jetty</strong>, as HTTP/2 server. And that's all!</p>
+
+<h1>
+<a id="application-and-modules" class="anchor" href="#application-and-modules" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Application and Modules</h1>
+
+<p>The <strong>Application</strong> is the entry point for a Gasoline Application. You can add your
+routes direct to the application, or you can use <strong>Modules</strong> to split your application
+on several small components.</p>
+
+<h1>
+<a id="hello-world" class="anchor" href="#hello-world" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Hello World</h1>
+
+<pre><code>import static java.lang.String.format;
+
+import gasoline.Application;
+
+public class HelloWorld {
+
+  public final String message;
+
+  public HelloWorld() {
+    this("Strange");
+  }
+
+  public HelloWorld(String name) {
+    this.message = format("Hello, %s!", name);
+  }
+
+  public static void main(String[] args) {
+    Application app = new Application();
+
+    app.get("/", (req) -&gt; {
+       return new HelloWorld();
+    });
+
+    app.get("/{name}", (req) -&gt; {
+      return new HelloWorld(req.attribute("name"));
+   });
+
+    app.server().onPort(8080).start();
+  }
+}
+</code></pre>
+
+<p>See the <em>examples</em> package for more examples.</p>
+
+<h1>
+<a id="routes" class="anchor" href="#routes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Routes</h1>
+
+<p>Routes define a <strong>RequestHandler</strong> to a path. The path should be relative and start with a "<strong>/</strong>".</p>
+
+<p>Also, you can use dynamic attributes on your path, defining then using curly-braces. The dynamic
+attributes can be retrieved later using the method <strong>Request.attribute(String name)</strong>.</p>
+
+<pre><code>app.get("/{name}", (req) -&gt; {
+  return new HelloWorld(req.attribute("name"));
+});
+</code></pre>
+
+<h1>
+<a id="request-handlers" class="anchor" href="#request-handlers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request Handlers</h1>
+
+<p>A <strong>RequestHandler</strong> is a function that receives a <em>Request</em> as parameter and
+return an <em>Object</em> as response.</p>
+
+<p>It can return basically anything, a <em>Response</em>, generated using <strong>Context</strong> help methods,
+or an arbitrary <em>Object</em>, that will be rendered as Json using <strong>Context#toJSon</strong> method, or
+even a <strong>Future</strong> or a <strong>CompletableFuture</strong> which will be processed asynchronously.</p>
+
+<p>We will talk more about <em>asynchronous handlers</em> later on.</p>
+
+<h1>
+<a id="filters" class="anchor" href="#filters" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Filters</h1>
+
+<p>Filters can be used to modify <strong>Requests</strong> before the execution of the <strong>RequestHandler</strong>, or even
+to verify pre-conditions and interrupt the flow.
+Filters are pretty much like a <strong>RequestHandler</strong> but they don't return anything.</p>
+
+<pre><code>app.filter(
+  (req) -{
+    Optional&lt;String&gt; auth = req.header("auth");
+    if (!auth.isPresent() || auth.get() != "secret") {
+      Context.abort(StatusCode.UNAUTHORIZED);
+    }
+  }, 
+  app.get("/", (req) -&gt; {
+    return new HelloWorld();
+  });
+);
+</code></pre>
+
+<h1>
+<a id="request" class="anchor" href="#request" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h1>
+
+<h1>
+<a id="context" class="anchor" href="#context" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Context</h1>
+
+<p>The context class provides utilities methods to be used in the context of a <strong>RequestHandler</strong>.
+Such methods can help you transcode <em>Objects</em> to <em>Json</em> and vice-versa, create custom <em>Responses</em>,
+with different <em>Status Codes</em>, and much more.</p>
+
+<p>Here goes a non-exhaustive list of methods provided by the <strong>Context</strong> class.</p>
+
+<ul>
+<li>fromJson(String json, Class&lt;?&gt; asClass)</li>
+<li>toJson(Object obj)</li>
+<li>response(StatusCode sc)</li>
+<li>response(StatusCode sc, Object obj)</li>
+<li>ok - alias for <em>response(StatusCode.OK)</em>
+</li>
+<li>created(Object obj) - alias for <em>response(StatusCode.CREATED, obj)</em>
+</li>
+<li>notfound() - alias for <em>response(StatusCode.NOT_FOUND)</em>
+</li>
+<li>badRequest() - alias for <em>response(StatusCode.BAD_REQUEST)</em>
+</li>
+</ul>
+
+<p>Note that as all the methods are static, you can use static imports.</p>
+
+<h1>
+<a id="async" class="anchor" href="#async" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Async</h1>
+
+<h1>
+<a id="server" class="anchor" href="#server" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Server</h1>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/daniloqueiroz/gasoline">Gasoline</a> is maintained by <a href="https://github.com/daniloqueiroz">daniloqueiroz</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
