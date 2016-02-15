@@ -1,5 +1,7 @@
 # Gasoline
 
+[![Build Status](https://travis-ci.org/daniloqueiroz/gasoline.svg?branch=master)](https://travis-ci.org/daniloqueiroz/gasoline)
+
 Gasoline is a very simple Micro Framework for build REST APIs using Java 8.
 
 Only of the main goals of Gasoline is be as less opinionated as possible,
