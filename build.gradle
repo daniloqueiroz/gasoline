@@ -1,0 +1,45 @@
+plugins {
+  id 'java'
+  id 'application'
+  id 'eclipse'
+  id 'idea'
+  
+  // community plugins
+  id 'com.bluepapa32.watch' version '0.1.5'
+  id 'com.github.ben-manes.versions' version '0.12.0'
+}
+
+version = '0.1.0'
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+  // repositories used to look for dependencies
+  jcenter()
+}
+
+
+dependencies {
+  compile (
+    'com.google.code.gson:gson:2.4',
+  )
+
+  testCompile (
+    'junit:junit:4.12',
+    'org.assertj:assertj-core:3.3.0',
+    'org.mockito:mockito-all:2.0.2-beta',
+  )
+}
+
+watch {
+  // configure watch plugin
+  java {
+      files files('src/')
+      tasks 'test'
+  }
+}
+
+task wrapper(type: Wrapper) {
+  // sets gradle version installed by gradle wrapper
+  gradleVersion = '2.11'
+}
