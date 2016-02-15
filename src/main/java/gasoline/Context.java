@@ -24,7 +24,9 @@ public class Context {
     return JSON_TRANSCODER.toJson(source);
   }
 
-  public static void abort(StatusCode code) {
+  public static Void abort(StatusCode code) {
+    // it returns Void to allow usage inside RequestHandlers
+    // (req) -> {return Context.abort(StatusCode.SERVER_ERROR);}
     throw new RequestAbortedException(code);
   }
 
