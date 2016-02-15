@@ -37,8 +37,7 @@ public class RoutingTableTest {
 
   @Test
   public void find_variableRouteWrongMethod_routeNotFound() {
-    RoutingTable router = new RoutingTable(asList(new Route("/users/{name}/posts/{id}/",
-        HttpMethod.POST, (req) -> {
+    RoutingTable router = new RoutingTable(asList(new Route("/users/{name}/posts/{id}/", HttpMethod.POST, (req) -> {
       return null;
     })));
     Optional<Route> route = router.findRouteFor("/users/danilo/posts/1/", HttpMethod.GET);
@@ -48,8 +47,7 @@ public class RoutingTableTest {
 
   @Test
   public void find_simpleVariableRouteWrongPath_routeNotFound() {
-    RoutingTable router = new RoutingTable(asList(new Route("/{name}/messages",
-         HttpMethod.GET, (req) -> {
+    RoutingTable router = new RoutingTable(asList(new Route("/{name}/messages", HttpMethod.GET, (req) -> {
       return null;
     })));
     Optional<Route> route = router.findRouteFor("/danilo", HttpMethod.GET);
@@ -89,7 +87,7 @@ public class RoutingTableTest {
 
     RoutingTable router = new RoutingTable(asList(originalRoute));
     Optional<Route> route = router.findRouteFor("/users/danilo/posts/1", HttpMethod.GET);
-    
+
     assertThat(route).containsSame(originalRoute);
   }
 }

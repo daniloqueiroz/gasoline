@@ -1,9 +1,8 @@
 package gasoline.testing;
 
-import static gasoline.Context.*;
+import static gasoline.Context.toJson;
+
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import gasoline.Application;
 import gasoline.Module;

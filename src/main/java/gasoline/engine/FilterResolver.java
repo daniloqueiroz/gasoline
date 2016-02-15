@@ -11,7 +11,7 @@ import gasoline.engine.routing.Route;
 import gasoline.request.Filter;
 import gasoline.request.FilterHandler;
 
-public class FilterResolver{
+public class FilterResolver {
 
   private final Map<Route, List<FilterHandler>> filtersByRoute = new HashMap<>();
 

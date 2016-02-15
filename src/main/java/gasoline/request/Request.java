@@ -16,7 +16,7 @@ public class Request {
   private final HashMap<String, String> attributes = new HashMap<>();
   private final HashMap<String, String> headers = new HashMap<>();
   private String body;
-  
+
   public Request(String urlPath, HttpMethod method) {
     this.path = PathUtils.normalizePath(urlPath);
     this.method = method;

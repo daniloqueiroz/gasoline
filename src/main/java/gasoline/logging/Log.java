@@ -31,7 +31,7 @@ public class Log {
   public static void error(String message, Object... objects) {
     getLogger().severe(() -> format(message, objects));
   }
-  
+
   public static void error(Throwable t, String message, Object... objects) {
     getLogger().severe(() -> {
       String msg = format(message, objects);

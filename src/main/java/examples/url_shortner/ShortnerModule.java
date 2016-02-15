@@ -18,11 +18,11 @@ import gasoline.logging.Log;
  */
 public class ShortnerModule implements Module {
 
-  private HashMap<String, ShortUrl> shortUrls = new HashMap<>();
-  private AtomicInteger integer = new AtomicInteger(0);
+  private final HashMap<String, ShortUrl> shortUrls = new HashMap<>();
+  private final AtomicInteger integer = new AtomicInteger(0);
 
   private String getRandomId() {
-    return format("a%sd", integer.incrementAndGet());
+    return format("a%sd", this.integer.incrementAndGet());
   }
 
   private ShortUrl addShortUrl(String url) {
@@ -32,11 +32,11 @@ public class ShortnerModule implements Module {
     return shortUrl;
   }
 
+  @Override
   public void init(Application app) {
-    app.before(
-        (req) -> {
-          Log.info("Filter!");
-        },
+    app.before((req) -> {
+      Log.info("Filter!");
+    } ,
 
         app.post("/", (req) -> {
           Optional<String> body = req.body();
@@ -51,8 +51,7 @@ public class ShortnerModule implements Module {
         app.get("/{short_url}", (req) -> {
           String shortUrl = req.attribute("short_url");
           return Optional.ofNullable(this.shortUrls.get(shortUrl));
-        })
-    );
+        }));
   }
 
   public static class ShortUrl {

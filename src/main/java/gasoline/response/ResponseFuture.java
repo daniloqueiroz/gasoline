@@ -12,7 +12,7 @@ import java.util.concurrent.TimeoutException;
 public class ResponseFuture implements Future<Response> {
 
   private Response result;
-  private CountDownLatch latch = new CountDownLatch(1);
+  private final CountDownLatch latch = new CountDownLatch(1);
 
   public void set(Response result) {
     this.latch.countDown();
@@ -39,7 +39,7 @@ public class ResponseFuture implements Future<Response> {
     this.latch.await();
     return this.result;
   }
- 
+
   @Override
   public Response get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
     this.latch.await(timeout, unit);

@@ -75,7 +75,7 @@ public class PathUtils {
       int index = path.indexOf('{', from);
       if (index != -1) {
         from = path.indexOf('}', index);
-        attributes.add(path.substring(index+1, from));
+        attributes.add(path.substring(index + 1, from));
       } else {
         from = index;
       }

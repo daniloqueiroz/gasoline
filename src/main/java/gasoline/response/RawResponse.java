@@ -27,7 +27,7 @@ public class RawResponse implements Response {
   public StatusCode statusCode() {
     return this.code;
   }
- 
+
   public void prepareBody(Object content) {
     if (content != null) {
       String rawBody = Context.toJson(content);

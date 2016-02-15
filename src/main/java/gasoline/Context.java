@@ -8,8 +8,9 @@ import gasoline.response.RawResponse;
 import gasoline.response.Response;
 
 /**
- * This class contains several static methods to be used when processing a request.
- * 
+ * This class contains several static methods to be used when processing a
+ * request.
+ *
  * @author Danilo Queiroz <dpenna.queiroz@gmail.com>
  */
 public class Context {
@@ -34,7 +35,7 @@ public class Context {
   public static Response response(StatusCode code, Object content) {
     return new RawResponse(code, content);
   }
-  
+
   public static Response ok(Object content) {
     return response(StatusCode.OK, content);
   }

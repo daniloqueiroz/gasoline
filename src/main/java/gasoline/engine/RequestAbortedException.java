@@ -14,5 +14,4 @@ public class RequestAbortedException extends RuntimeException {
     this.statusCode = code;
   }
 
-
 }

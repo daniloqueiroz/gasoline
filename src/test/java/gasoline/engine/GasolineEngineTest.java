@@ -27,7 +27,7 @@ public class GasolineEngineTest {
   public void setUp() {
     this.engine = new Application(new TestingApp()::init).engine();
   }
-  
+
   @Test
   public void handle_urlNotFound_404() throws InterruptedException, ExecutionException {
     Request req = new Request("/not_found", HttpMethod.GET);
@@ -127,7 +127,7 @@ public class GasolineEngineTest {
     Response resp = holder.get();
     assertThat(resp.statusCode()).isEqualTo(StatusCode.UNAUTHORIZED);
   }
-  
+
   @Test
   public void get_auth_with_header_200() throws InterruptedException, ExecutionException {
     Request req = new Request("/filtered/me", HttpMethod.GET);

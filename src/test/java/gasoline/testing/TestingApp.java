@@ -47,16 +47,13 @@ public class TestingApp {
       return new Message(format("%s:%s", req.attribute("id"), req.attribute("number")));
     });
 
-    app.before(
-        (req) -> {
-          Optional<String> auth = req.header("auth");
-          if (!auth.isPresent() || auth.get() != "secret") {
-            Context.abort(StatusCode.UNAUTHORIZED);
-          }
-        },
-        app.get("/filtered/{name}", (req) -> {
-          return new Message(format("%s:%s", req.attribute("id"), req.attribute("number")));
-        })
-    );
+    app.before((req) -> {
+      Optional<String> auth = req.header("auth");
+      if (!auth.isPresent() || auth.get() != "secret") {
+        Context.abort(StatusCode.UNAUTHORIZED);
+      }
+    } , app.get("/filtered/{name}", (req) -> {
+      return new Message(format("%s:%s", req.attribute("id"), req.attribute("number")));
+    }));
   }
 }

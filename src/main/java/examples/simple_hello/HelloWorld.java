@@ -5,9 +5,9 @@ import static java.lang.String.format;
 import gasoline.Application;
 
 public class HelloWorld {
-  
+
   public final String message;
-  
+
   public HelloWorld() {
     this("Strange");
   }
@@ -20,12 +20,12 @@ public class HelloWorld {
     Application app = new Application();
 
     app.get("/", (req) -> {
-       return new HelloWorld();
+      return new HelloWorld();
     });
-    
+
     app.get("/{name}", (req) -> {
       return new HelloWorld(req.attribute("name"));
-   });
+    });
 
     app.server().onPort(8080).start();
   }

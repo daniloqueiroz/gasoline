@@ -41,13 +41,13 @@ public class Application {
 
   /**
    * Adds a new Route to the application.
-   * 
+   *
    * <pre>
    * application.route("/hello/{name}", HttpMethod.GET, (req) -> {
    *   return String.format("Hello, %s!", req.attribute("name"));
    * });
    * </pre>
-   * 
+   *
    * @param path
    *          The url path for the route. It should start with a '/' and can
    *          contain path attributes defined using curly-braces. Eg.:
@@ -67,7 +67,7 @@ public class Application {
 
   /**
    * Adds a {@link HttpMethod#GET} route.
-   * 
+   *
    * @see Application#route(String, HttpMethod, RequestHandler)
    */
   public Route get(String path, RequestHandler handler) {
@@ -76,7 +76,7 @@ public class Application {
 
   /**
    * Adds a {@link HttpMethod#POST} route.
-   * 
+   *
    * @see Application#route(String, HttpMethod, RequestHandler)
    */
   public Route post(String path, RequestHandler handler) {
@@ -85,7 +85,7 @@ public class Application {
 
   /**
    * Adds a {@link HttpMethod#PUT} route.
-   * 
+   *
    * @see Application#route(String, HttpMethod, RequestHandler)
    */
   public Route put(String path, RequestHandler handler) {
@@ -94,7 +94,7 @@ public class Application {
 
   /**
    * Adds a {@link HttpMethod#DELETE} route.
-   * 
+   *
    * @see Application#route(String, HttpMethod, RequestHandler)
    */
   public Route delete(String path, RequestHandler handler) {
@@ -103,7 +103,7 @@ public class Application {
 
   /**
    * Adds a {@link HttpMethod#PATCH} route.
-   * 
+   *
    * @see Application#route(String, HttpMethod, RequestHandler)
    */
   public Route patch(String path, RequestHandler handler) {
@@ -113,7 +113,7 @@ public class Application {
   /**
    * Adds a {@link FilterHandler} to be executed to filter the request
    * <b>BEFORE</b> the execution of the given routes.
-   * 
+   *
    * <pre>
    * application.before((req) -> {
    *        // TODO do something before the RequestHandler.
@@ -121,18 +121,19 @@ public class Application {
    *    application.get(...);
    * );
    * </pre>
-   * 
+   *
    * @param filter
    *          The {@link FilterHandler} to filter the requests. As it's a
    *          functional interface, it can be defined as a lambda function.
-   * @param routes The Routes which this filter must be applied.
+   * @param routes
+   *          The Routes which this filter must be applied.
    */
   public void before(FilterHandler filter, Route... routes) {
     this.filters.add(new Filter(filter, routes));
   }
 
   public GasolineEngine engine() {
-    return new GasolineEngine(new RoutingTable(routes), new FilterResolver(this.filters));
+    return new GasolineEngine(new RoutingTable(this.routes), new FilterResolver(this.filters));
   }
 
   public Server server() {

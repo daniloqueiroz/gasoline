@@ -37,7 +37,7 @@ public class Route {
   public int hashCode() {
     return hash(this.path, this.method);
   }
-  
+
   @Override
   public boolean equals(Object obj) {
     boolean equals = false;
