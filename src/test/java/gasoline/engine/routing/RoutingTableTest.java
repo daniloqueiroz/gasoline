@@ -1,4 +1,4 @@
-package gasoline.routing;
+package gasoline.engine.routing;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;

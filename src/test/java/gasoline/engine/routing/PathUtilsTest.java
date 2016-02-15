@@ -1,4 +1,4 @@
-package gasoline.routing;
+package gasoline.engine.routing;
 
 import static gasoline.engine.routing.PathUtils.dynamicPathRegex;
 import static gasoline.engine.routing.PathUtils.isDynamicPath;
