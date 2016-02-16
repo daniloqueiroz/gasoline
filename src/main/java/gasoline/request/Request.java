@@ -15,6 +15,7 @@ public class Request {
   private final HttpMethod method;
   private final HashMap<String, String> attributes = new HashMap<>();
   private final HashMap<String, String> headers = new HashMap<>();
+  private final HashMap<String, String> parameters = new HashMap<>();
   private String body;
 
   public Request(String urlPath, HttpMethod method) {
@@ -53,5 +54,13 @@ public class Request {
 
   public void header(String name, String value) {
     this.headers.put(name, value);
+  }
+
+  public Optional<String> parameter(String name) {
+    return Optional.ofNullable(this.parameters.get(name));
+  }
+
+  public void parameter(String name, String value) {
+    this.parameters.put(name, value);
   }
 }
