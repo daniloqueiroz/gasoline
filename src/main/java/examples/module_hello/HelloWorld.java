@@ -34,6 +34,6 @@ public class HelloWorld {
 
   public static void main(String[] args) {
     Application app = new Application(HelloWorld::init); // a module can be just a function
-    app.server().onPort(8080).start();
+    app.server().start();
   }
 }

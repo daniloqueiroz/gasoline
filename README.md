@@ -121,4 +121,18 @@ Not Supported Yet!
 
 # Server
 
-Not Supported Yet!
+As said before, it uses **Jetty Server** as embedded web server. For now it isn't supported to
+replace Jetty, neither deploy a **Gasoline** application on any other Container Server.
+
+The **JettyServer** instance can be obtained as follows:
+
+    JettyServer server = app.server();
+    server.onPort(7777).start();
+
+The **JettyServer** instances provides methods to configure some of it's internals settings,
+but we try to set reasonable defaults:
+
+* **Default Port**: 8080
+
+Finally, **GZip** compression support is active.
+

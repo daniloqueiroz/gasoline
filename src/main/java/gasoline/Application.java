@@ -6,9 +6,9 @@ import java.util.List;
 
 import gasoline.engine.FilterResolver;
 import gasoline.engine.GasolineEngine;
-import gasoline.engine.Server;
 import gasoline.engine.routing.Route;
 import gasoline.engine.routing.RoutingTable;
+import gasoline.engine.server.JettyServer;
 import gasoline.http.HttpMethod;
 import gasoline.request.Filter;
 import gasoline.request.FilterHandler;
@@ -136,7 +136,7 @@ public class Application {
     return new GasolineEngine(new RoutingTable(this.routes), new FilterResolver(this.filters));
   }
 
-  public Server server() {
-    return new Server();
+  public JettyServer server() {
+    return new JettyServer(this.engine());
   }
 }

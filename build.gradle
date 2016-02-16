@@ -21,6 +21,7 @@ repositories {
 dependencies {
   compile (
     'com.google.code.gson:gson:2.4',
+    'org.eclipse.jetty.aggregate:jetty-all:9.3.7.v20160115',
     'org.slf4j:slf4j-api:1.7.16'
   )
 
