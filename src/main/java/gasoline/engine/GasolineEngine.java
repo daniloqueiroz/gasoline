@@ -16,10 +16,9 @@ import gasoline.request.FilterHandler;
 import gasoline.request.Request;
 import gasoline.response.RawResponse;
 import gasoline.response.Response;
-import gasoline.response.ResponseFuture;
 import gasoline.utils.Log;
 
-public class GasolineEngine implements Engine<Request, ResponseFuture> {
+public class GasolineEngine {
 
   private final RoutingTable routingTable;
   private final FilterResolver filters;
@@ -35,7 +34,7 @@ public class GasolineEngine implements Engine<Request, ResponseFuture> {
    * This does most of the request process life-cycle, from routing the request,
    * processing it, encoding the response when needed and so on.
    */
-  private Response process(Request request) {
+  public Response process(Request request) {
     // TODO set log context
     Response resp;
     Optional<Route> route = this.routingTable.findRouteFor(request.path(), request.method());
@@ -96,15 +95,10 @@ public class GasolineEngine implements Engine<Request, ResponseFuture> {
     } else if (result instanceof RawResponse) {
       resp = (RawResponse) result;
     } else {
+      // TODO future and Completable Futures
       resp = new RawResponse(StatusCode.OK, result);
     }
 
     return resp;
   }
-
-  @Override
-  public void handle(Request request, ResponseFuture futureResponse) {
-    futureResponse.set(this.process(request));
-  }
-
 }

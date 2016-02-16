@@ -4,7 +4,6 @@ import static gasoline.Context.toJson;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 import gasoline.Application;
 import gasoline.Module;
@@ -12,7 +11,6 @@ import gasoline.engine.GasolineEngine;
 import gasoline.http.HttpMethod;
 import gasoline.request.Request;
 import gasoline.response.Response;
-import gasoline.response.ResponseFuture;
 
 /**
  * @author Danilo Queiroz <dpenna.queiroz@gmail.com>
@@ -36,13 +34,8 @@ public class Client {
   }
 
   private Response dispatchRequest(Request request) {
-    ResponseFuture future = new ResponseFuture();
-    this.engine.handle(request, future);
-    try {
-      return future.get();
-    } catch (InterruptedException | ExecutionException e) {
-      throw new RuntimeException(e);
-    }
+    // TODO handle future/completableFutures
+    return this.engine.process(request);
   }
 
   private Request createRequest(String urlPath, HttpMethod method, Optional<Object> body,
