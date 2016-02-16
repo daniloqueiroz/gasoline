@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import gasoline.Application;
 import gasoline.Module;
-import gasoline.logging.Log;
+import gasoline.utils.Log;
 
 /**
  * @author Danilo Queiroz <dpenna.queiroz@gmail.com>

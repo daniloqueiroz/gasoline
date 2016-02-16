@@ -12,12 +12,12 @@ import gasoline.engine.routing.PathUtils;
 import gasoline.engine.routing.Route;
 import gasoline.engine.routing.RoutingTable;
 import gasoline.http.StatusCode;
-import gasoline.logging.Log;
 import gasoline.request.FilterHandler;
 import gasoline.request.Request;
 import gasoline.response.RawResponse;
 import gasoline.response.Response;
 import gasoline.response.ResponseFuture;
+import gasoline.utils.Log;
 
 public class GasolineEngine implements Engine<Request, ResponseFuture> {
 

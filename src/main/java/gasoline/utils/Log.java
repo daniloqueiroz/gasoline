@@ -1,4 +1,4 @@
-package gasoline.logging;
+package gasoline.utils;
 
 import static java.lang.String.format;
 

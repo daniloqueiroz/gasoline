@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import gasoline.http.HttpMethod;
-import gasoline.logging.Log;
+import gasoline.utils.Log;
 
 /**
  * This entity is responsible to find a {@link Route} for a given URL path.
