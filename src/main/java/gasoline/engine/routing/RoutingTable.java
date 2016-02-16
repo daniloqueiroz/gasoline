@@ -29,10 +29,10 @@ public class RoutingTable {
   private RoutingTable buildRoutingTables(Collection<Route> routes) {
     for (Route route : routes) {
       if (isDynamicPath(route.path)) {
-        Log.info("Dynamic route %s recorded", route);
+        Log.info("Dynamic route {} recorded", route);
         this.dynamicRoutes.insert(dynamicPathRegex(route.path), route);
       } else {
-        Log.info("Static route %s recorded", route);
+        Log.info("Static route {} recorded", route);
         this.staticRoutes.put(this.routeKey(route), route);
       }
     }
@@ -52,10 +52,10 @@ public class RoutingTable {
    */
   public Optional<Route> findRouteFor(String path, HttpMethod method) {
     String routeKey = this.routeKey(path, method);
-    Log.debug("Trying to find route for %s", routeKey);
+    Log.debug("Trying to find route for {}", routeKey);
     Route route = this.staticRoutes.getOrDefault(routeKey, this.dynamicRoutes.search(path, method));
     Optional<Route> result = Optional.ofNullable(route);
-    Log.debug("Found route for %s was %s", routeKey, result);
+    Log.debug("Found route for {} was {}", routeKey, result);
     return result;
   }
 }

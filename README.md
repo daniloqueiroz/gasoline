@@ -6,7 +6,7 @@ Gasoline is a very simple Micro Framework for build REST APIs using Java 8.
 
 One of the main goals of Gasoline is be as less opinionated as possible
 so it comes with no batteries included - no configuration, nor IoC, nor template support 
-and Log support is build using **java.util.logging**.
+and Log support is build using **SLF4J**.
 
 As it was built with REST API in mind, it only support *JSon* data, using [**GSon**](https://github.com/google/gson) 
 library.

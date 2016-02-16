@@ -21,12 +21,18 @@ repositories {
 dependencies {
   compile (
     'com.google.code.gson:gson:2.4',
+    'org.slf4j:slf4j-api:1.7.16'
   )
 
   testCompile (
     'junit:junit:4.12',
     'org.assertj:assertj-core:3.3.0',
     'org.mockito:mockito-all:2.0.2-beta',
+    'org.slf4j:slf4j-simple:1.7.16'
+  )
+  
+  runtime (
+    'org.slf4j:slf4j-simple:1.7.16'
   )
 }
 

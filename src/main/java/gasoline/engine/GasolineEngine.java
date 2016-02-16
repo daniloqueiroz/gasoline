@@ -45,15 +45,15 @@ public class GasolineEngine implements Engine<Request, ResponseFuture> {
         this.prepareRequest(request, r);
         this.executeFilters(request, r);
         resp = this.executeRoute(request, r);
-        Log.info("Request for %s processed. Status code: %s", route.get().path, resp.statusCode());
+        Log.info("Request for {} processed. Status code: {}", route.get().path, resp.statusCode());
       } else {
         resp = notFound();
-        Log.info("Route for %s not found", request);
+        Log.info("Route for {} not found", request);
       }
     } catch (RequestAbortedException ex) {
       resp = new RawResponse(ex.statusCode);
     } catch (Throwable t) {
-      Log.error(t, "Internal Server error when processing request for %s", route.get());
+      Log.error(t, "Internal Server error when processing request for {}", route.get());
       resp = new RawResponse(StatusCode.SERVER_ERROR);
     }
     return resp;
@@ -62,7 +62,7 @@ public class GasolineEngine implements Engine<Request, ResponseFuture> {
   private void executeFilters(Request request, Route route) {
     List<FilterHandler> filters = this.filters.findFiltersFor(route);
     filters.forEach((handler) -> {
-      Log.debug("Executing filters for route %s", route);
+      Log.debug("Executing filters for route {}", route);
       handler.filter(request);
     });
   }
@@ -78,13 +78,13 @@ public class GasolineEngine implements Engine<Request, ResponseFuture> {
   }
 
   private Response executeRoute(Request request, Route route) {
-    Log.debug("Executing handler for %s", route.path);
+    Log.debug("Executing handler for {}", route.path);
     Object result = route.handler.handle(request);
     return this.processResult(result, route);
   }
 
   private Response processResult(Object result, Route route) {
-    Log.debug("Processing response %s for %s", result, route.path);
+    Log.debug("Processing response {} for {}", result, route.path);
     RawResponse resp = null;
     if (result instanceof Optional) {
       Optional<?> opt = (Optional<?>) result;
