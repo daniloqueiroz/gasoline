@@ -2,6 +2,8 @@ package gasoline.testing;
 
 import static gasoline.Context.toJson;
 
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import gasoline.Application;
@@ -24,7 +26,16 @@ public class Client {
     this.engine = app.engine();
   }
 
-  private Response request(Request request) {
+  private Response request(String urlPath, HttpMethod method) {
+    return this.request(urlPath, method, Optional.empty(), Optional.empty());
+  }
+
+  private Response request(String urlPath, HttpMethod method, Optional<Object> body,
+      Optional<Map<String, String>> headers) {
+    return dispatchRequest(createRequest(urlPath, method, body, headers));
+  }
+
+  private Response dispatchRequest(Request request) {
     ResponseFuture future = new ResponseFuture();
     this.engine.handle(request, future);
     try {
@@ -34,16 +45,45 @@ public class Client {
     }
   }
 
-  public Response get(String urlPath) {
-    return this.request(new Request(urlPath, HttpMethod.GET));
+  private Request createRequest(String urlPath, HttpMethod method, Optional<Object> body,
+      Optional<Map<String, String>> headers) {
+    Request request;
+    if (body.isPresent()) {
+      request = new Request(urlPath, method, toJson(body.get()));
+    } else {
+      request = new Request(urlPath, method);
+    }
+    headers.ifPresent((map) -> map.entrySet().forEach((entry) -> {
+      request.header(entry.getKey(), entry.getValue());
+    }));
+    return request;
+  }
 
+  public Response get(String urlPath) {
+    return this.request(urlPath, HttpMethod.GET);
+  }
+
+  public Response get(String urlPath, Map<String, String> headers) {
+    return this.request(urlPath, HttpMethod.GET, Optional.empty(), Optional.ofNullable(headers));
   }
 
   public Response post(String urlPath) {
-    return this.request(new Request(urlPath, HttpMethod.POST));
+    return this.request(urlPath, HttpMethod.POST);
   }
 
   public Response post(String urlPath, Object body) {
-    return this.request(new Request(urlPath, HttpMethod.POST, toJson(body)));
+    return this.request(urlPath, HttpMethod.POST, Optional.ofNullable(body), Optional.empty());
+  }
+
+  public Response put(String urlPath) {
+    return this.request(urlPath, HttpMethod.PUT);
+  }
+
+  public Response put(String urlPath, Object body) {
+    return this.request(urlPath, HttpMethod.PUT, Optional.ofNullable(body), Optional.empty());
+  }
+
+  public Response delete(String urlPath) {
+    return this.request(urlPath, HttpMethod.DELETE);
   }
 }
