@@ -6,6 +6,7 @@ plugins {
   // community plugins
   id 'com.bluepapa32.watch' version '0.1.5'
   id 'com.github.ben-manes.versions' version '0.12.0'
+  id 'com.github.hierynomus.license' version '0.11.0'
 }
 
 version = '0.1.0'
@@ -43,6 +44,11 @@ watch {
       files files('src/')
       tasks 'test'
   }
+}
+
+
+license {
+  header = file('LICENSE_HEADER')
 }
 
 task wrapper(type: Wrapper) {
