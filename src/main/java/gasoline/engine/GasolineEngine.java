@@ -14,7 +14,6 @@ import gasoline.engine.routing.RoutingTable;
 import gasoline.http.StatusCode;
 import gasoline.request.FilterHandler;
 import gasoline.request.Request;
-import gasoline.response.RawResponse;
 import gasoline.response.Response;
 import gasoline.utils.Log;
 
@@ -50,10 +49,10 @@ public class GasolineEngine {
         Log.info("Route for {} not found", request);
       }
     } catch (RequestAbortedException ex) {
-      resp = new RawResponse(ex.statusCode);
+      resp = new Response(ex.statusCode);
     } catch (Throwable t) {
       Log.error(t, "Internal Server error when processing request for {}", route.get());
-      resp = new RawResponse(StatusCode.SERVER_ERROR);
+      resp = new Response(StatusCode.SERVER_ERROR);
     }
     return resp;
   }
@@ -84,19 +83,19 @@ public class GasolineEngine {
 
   private Response processResult(Object result, Route route) {
     Log.debug("Processing response {} for {}", result, route.path);
-    RawResponse resp = null;
+    Response resp = null;
     if (result instanceof Optional) {
       Optional<?> opt = (Optional<?>) result;
       if (opt.isPresent()) {
-        resp = (RawResponse) ok(opt.get());
+        resp = (Response) ok(opt.get());
       } else {
-        resp = (RawResponse) notFound();
+        resp = (Response) notFound();
       }
-    } else if (result instanceof RawResponse) {
-      resp = (RawResponse) result;
+    } else if (result instanceof Response) {
+      resp = (Response) result;
     } else {
       // TODO future and Completable Futures
-      resp = new RawResponse(StatusCode.OK, result);
+      resp = new Response(StatusCode.OK, result);
     }
 
     return resp;

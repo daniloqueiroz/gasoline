@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import gasoline.engine.RequestAbortedException;
 import gasoline.http.StatusCode;
 import gasoline.request.Request;
-import gasoline.response.RawResponse;
 import gasoline.response.Response;
 
 /**
@@ -64,11 +63,11 @@ public class Context {
   }
 
   public static Response response(StatusCode code) {
-    return new RawResponse(code);
+    return new Response(code);
   }
 
   public static Response response(StatusCode code, Object content) {
-    return new RawResponse(code, content);
+    return new Response(code, content);
   }
 
   public static Response ok(Object content) {

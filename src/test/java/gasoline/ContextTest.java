@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
 
 import gasoline.http.StatusCode;
-import gasoline.response.RawResponse;
+import gasoline.response.Response;
 import gasoline.testing.TestingApp.Message;
 
 public class ContextTest {
@@ -22,7 +22,7 @@ public class ContextTest {
   @Test
   public void toJson_fromJsonResponse() {
     String content = "Hey na na!";
-    RawResponse resp = new RawResponse(StatusCode.OK, new Message(content));
+    Response resp = new Response(StatusCode.OK, new Message(content));
 
     Message msg = Context.fromJson(resp.body().get(), Message.class);
 
