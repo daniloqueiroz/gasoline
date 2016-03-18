@@ -4,7 +4,6 @@ plugins {
   id 'idea'
   
   // community plugins
-  id 'com.bluepapa32.watch' version '0.1.5'
   id 'com.github.ben-manes.versions' version '0.12.0'
   id 'com.github.hierynomus.license' version '0.11.0'
 }
@@ -21,31 +20,22 @@ repositories {
 
 dependencies {
   compile (
-    'com.google.code.gson:gson:2.4',
-    'org.eclipse.jetty.aggregate:jetty-all:9.3.7.v20160115',
-    'org.slf4j:slf4j-api:1.7.16'
+    'com.google.code.gson:gson:2.6.2',
+    'org.eclipse.jetty.aggregate:jetty-all:9.3.8.RC0',
+    'org.slf4j:slf4j-api:1.7.19',
   )
 
   testCompile (
     'junit:junit:4.12',
     'org.assertj:assertj-core:3.3.0',
     'org.mockito:mockito-all:2.0.2-beta',
-    'org.slf4j:slf4j-simple:1.7.16'
+    'org.slf4j:slf4j-simple:1.7.19'
   )
   
   runtime (
-    'org.slf4j:slf4j-simple:1.7.16'
+    'org.slf4j:slf4j-simple:1.7.19'
   )
 }
-
-watch {
-  // configure watch plugin
-  java {
-      files files('src/')
-      tasks 'test'
-  }
-}
-
 
 license {
   header = file('LICENSE_HEADER')
