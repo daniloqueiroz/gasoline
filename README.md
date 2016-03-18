@@ -13,6 +13,8 @@ library.
 
 Other dependencies includes **Jetty**, as *HTTP/2* server. And that's all!
 
+Finally, gasoline is under LGPLv3 license.
+
 # Hello World
 
     import static java.lang.String.format;
@@ -82,7 +84,7 @@ Filters can be used to modify **Requests** before the execution of the **Request
 to verify pre-conditions and interrupt the flow.
 Filters are pretty much like a **RequestHandler** but they don't return anything.
 
-    app.filter(
+    app.before(
       (req) -{
         Optional<String> auth = req.header("auth");
         if (!auth.isPresent() || auth.get() != "secret") {
@@ -92,6 +94,17 @@ Filters are pretty much like a **RequestHandler** but they don't return anything
       app.get("/", (req) -> {
         return new HelloWorld();
       });
+    );
+
+Or to create filters that are applied to **all** defined routes, you can use:
+
+    app.beforeAll(
+      (req) -{
+        Optional<String> auth = req.header("auth");
+        if (!auth.isPresent() || auth.get() != "secret") {
+          Context.abort(StatusCode.UNAUTHORIZED);
+        }
+      }
     );
 
 # Request

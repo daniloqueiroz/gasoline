@@ -1,5 +1,6 @@
 package gasoline;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class Application {
 
   private final LinkedHashSet<Route> routes = new LinkedHashSet<>();
   private final List<Filter> filters = new LinkedList<>();
+  private final List<FilterHandler> globalFilters = new LinkedList<>();
 
   /**
    * Create an Application with the given modules
@@ -132,7 +134,28 @@ public class Application {
     this.filters.add(new Filter(filter, routes));
   }
 
+  /**
+   * Adds a {@link FilterHandler} to be executed to filter the request
+   * <b>BEFORE</b> the execution of ALL routes.
+   *
+   * <pre>
+   * application.beforeAll((req) -> {
+   *        // TODO do something before the RequestHandler.
+   *    });
+   * </pre>
+   *
+   * @param filter
+   *          The {@link FilterHandler} to filter all requests. As it's a
+   *          functional interface, it can be defined as a lambda function.
+   */
+  public void beforeAll(FilterHandler filter) {
+    this.globalFilters.add(filter);
+  }
+  
   public GasolineEngine engine() {
+    this.globalFilters.forEach(handler -> {
+      this.filters.add(new Filter(handler, new ArrayList<>(this.routes)));
+    });
     return new GasolineEngine(new RoutingTable(this.routes), new FilterResolver(this.filters));
   }
 
