@@ -36,22 +36,21 @@ public class ShortnerModule implements Module {
   public void init(Application app) {
     app.before((req) -> {
       Log.info("Filter!");
-    } ,
+    },
+    app.post("/", (req) -> {
+      Optional<String> body = req.body();
+      if (body.isPresent()) {
+        ShortUrlRequest in = fromJson(body.get(), ShortUrlRequest.class);
+        return created(this.addShortUrl(in.url));
+      } else {
+        return badRequest();
+      }
+    }),
 
-        app.post("/", (req) -> {
-          Optional<String> body = req.body();
-          if (body.isPresent()) {
-            ShortUrlRequest in = fromJson(body.get(), ShortUrlRequest.class);
-            return created(this.addShortUrl(in.url));
-          } else {
-            return badRequest();
-          }
-        }),
-
-        app.get("/{short_url}", (req) -> {
-          String shortUrl = req.attribute("short_url");
-          return Optional.ofNullable(this.shortUrls.get(shortUrl));
-        }));
+    app.get("/{short_url}", (req) -> {
+      String shortUrl = req.attribute("short_url");
+      return Optional.ofNullable(this.shortUrls.get(shortUrl));
+    }));
   }
 
   public static class ShortUrl {
