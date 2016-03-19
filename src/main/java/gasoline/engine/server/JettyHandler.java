@@ -27,14 +27,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.http.MimeTypes;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import gasoline.engine.GasolineEngine;
 import gasoline.http.HttpMethod;
 import gasoline.response.Response;
-import gasoline.utils.Log;
 
 class JettyHandler extends AbstractHandler {
 
+  private static final Logger LOG = LoggerFactory.getLogger(JettyHandler.class);
   private final GasolineEngine engine;
 
   public JettyHandler(GasolineEngine engine) {
@@ -99,7 +101,8 @@ class JettyHandler extends AbstractHandler {
       try {
         servletResponse.getWriter().write(body);
       } catch (Exception e) {
-        Log.error(e, "Error writing response: {}", body);
+        LOG.error("Error writing response: {}", body);
+        LOG.error("Output error", e);
       }
     });
     // TODO set headers

@@ -24,6 +24,9 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import gasoline.engine.routing.PathUtils;
 import gasoline.engine.routing.Route;
 import gasoline.engine.routing.RoutingTable;
@@ -31,10 +34,10 @@ import gasoline.http.StatusCode;
 import gasoline.request.FilterHandler;
 import gasoline.request.Request;
 import gasoline.response.Response;
-import gasoline.utils.Log;
 
 public class GasolineEngine {
 
+  private static final Logger LOG = LoggerFactory.getLogger(GasolineEngine.class);
   private final RoutingTable routingTable;
   private final FilterResolver filters;
 
@@ -59,15 +62,16 @@ public class GasolineEngine {
         this.prepareRequest(request, r);
         this.executeFilters(request, r);
         resp = this.executeRoute(request, r);
-        Log.info("Request for {} processed. Status code: {}", route.get().path, resp.statusCode());
+        LOG.info("Request for {} processed. Status code: {}", route.get().path, resp.statusCode());
       } else {
         resp = notFound();
-        Log.info("Route for {} not found", request);
+        LOG.info("Route for {} not found", request);
       }
     } catch (RequestAbortedException ex) {
       resp = new Response(ex.statusCode);
     } catch (Throwable t) {
-      Log.error(t, "Internal Server error when processing request for {}", route.get());
+      LOG.error("Internal Server error when processing request for {}", route.get());
+      LOG.error("Internal Server error when processing request", t);
       resp = new Response(StatusCode.SERVER_ERROR);
     }
     return resp;
@@ -76,7 +80,7 @@ public class GasolineEngine {
   private void executeFilters(Request request, Route route) {
     List<FilterHandler> filters = this.filters.findFiltersFor(route);
     filters.forEach((handler) -> {
-      Log.debug("Executing filters for route {}", route);
+      LOG.debug("Executing filters for route {}", route);
       handler.filter(request);
     });
   }
@@ -92,13 +96,13 @@ public class GasolineEngine {
   }
 
   private Response executeRoute(Request request, Route route) {
-    Log.debug("Executing handler for {}", route.path);
+    LOG.debug("Executing handler for {}", route.path);
     Object result = route.handler.handle(request);
     return this.processResult(result, route);
   }
 
   private Response processResult(Object result, Route route) {
-    Log.debug("Processing response {} for {}", result, route.path);
+    LOG.debug("Processing response {} for {}", result, route.path);
     Response resp = null;
     if (result instanceof Optional) {
       Optional<?> opt = (Optional<?>) result;

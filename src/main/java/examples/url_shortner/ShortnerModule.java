@@ -25,15 +25,18 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import gasoline.Application;
 import gasoline.Module;
-import gasoline.utils.Log;
 
 /**
  * @author Danilo Queiroz <dpenna.queiroz@gmail.com>
  */
 public class ShortnerModule implements Module {
 
+  private static final Logger LOG = LoggerFactory.getLogger(ShortnerModule.class);
   private final HashMap<String, ShortUrl> shortUrls = new HashMap<>();
   private final AtomicInteger integer = new AtomicInteger(0);
 
@@ -51,7 +54,7 @@ public class ShortnerModule implements Module {
   @Override
   public void init(Application app) {
     app.before((req) -> {
-      Log.info("Filter!");
+      LOG.info("Filter!");
     },
     app.post("/", (req) -> {
       Optional<String> body = req.body();

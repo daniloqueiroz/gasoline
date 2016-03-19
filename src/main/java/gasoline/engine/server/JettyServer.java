@@ -18,12 +18,14 @@ package gasoline.engine.server;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.gzip.GzipHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import gasoline.engine.GasolineEngine;
-import gasoline.utils.Log;
 
 public class JettyServer {
 
+  private static final Logger LOG = LoggerFactory.getLogger(JettyServer.class);
   public static final int DEFAULT_PORT = 8080;
   /*
    * TODO list:
@@ -44,7 +46,7 @@ public class JettyServer {
   }
 
   public void start() {
-    Log.info("Starting Jetty Server on port {}", this.port);
+    LOG.info("Starting Jetty Server on port {}", this.port);
     Server server = this.createServer();
     try {
       GzipHandler gzip = new GzipHandler();
@@ -54,7 +56,8 @@ public class JettyServer {
       server.start();
       server.join();
     } catch (Exception e) {
-      Log.error(e, "Unable to start Jetty Server on port {}", this.port);
+      LOG.error("Unable to start Jetty Server on port {}", this.port);
+      LOG.error("Error starting Setty Server", e);
     }
   }
 

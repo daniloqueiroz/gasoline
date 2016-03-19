@@ -25,8 +25,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import gasoline.http.HttpMethod;
-import gasoline.utils.Log;
 
 /**
  * This entity is responsible to find a {@link Route} for a given URL path.
@@ -35,6 +37,7 @@ import gasoline.utils.Log;
  */
 public class RoutingTable {
 
+  private static final Logger LOG = LoggerFactory.getLogger(RoutingTable.class);
   private final Map<String, Route> staticRoutes = new HashMap<>();
   private final PathTrie dynamicRoutes = new PathTrie();
 
@@ -45,10 +48,10 @@ public class RoutingTable {
   private RoutingTable buildRoutingTables(Collection<Route> routes) {
     for (Route route : routes) {
       if (isDynamicPath(route.path)) {
-        Log.info("Dynamic route {} recorded", route);
+        LOG.info("Dynamic route {} recorded", route);
         this.dynamicRoutes.insert(dynamicPathRegex(route.path), route);
       } else {
-        Log.info("Static route {} recorded", route);
+        LOG.info("Static route {} recorded", route);
         this.staticRoutes.put(this.routeKey(route), route);
       }
     }
@@ -68,10 +71,10 @@ public class RoutingTable {
    */
   public Optional<Route> findRouteFor(String path, HttpMethod method) {
     String routeKey = this.routeKey(path, method);
-    Log.debug("Trying to find route for {}", routeKey);
+    LOG.debug("Trying to find route for {}", routeKey);
     Route route = this.staticRoutes.getOrDefault(routeKey, this.dynamicRoutes.search(path, method));
     Optional<Route> result = Optional.ofNullable(route);
-    Log.debug("Found route for {} was {}", routeKey, result);
+    LOG.debug("Found route for {} was {}", routeKey, result);
     return result;
   }
 }
