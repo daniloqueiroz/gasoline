@@ -86,6 +86,10 @@ public class Context {
     return new Response(code, content);
   }
 
+  public static Response ok() {
+    return response(StatusCode.OK);
+  }
+
   public static Response ok(Object content) {
     return response(StatusCode.OK, content);
   }
