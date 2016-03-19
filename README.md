@@ -11,7 +11,9 @@ and Log support is build using **SLF4J**.
 As it was built with REST API in mind, it only support *JSon* data, using [**GSon**](https://github.com/google/gson) 
 library.
 
-Other dependencies includes **Jetty**, as *HTTP/2* server. And that's all!
+Other dependencies includes **Jetty**, as *HTTP* server and **SLF4J**. And that's all!
+
+Finally, gasoline is under LGPLv3 license.
 
 # Hello World
 
@@ -82,7 +84,7 @@ Filters can be used to modify **Requests** before the execution of the **Request
 to verify pre-conditions and interrupt the flow.
 Filters are pretty much like a **RequestHandler** but they don't return anything.
 
-    app.filter(
+    app.before(
       (req) -{
         Optional<String> auth = req.header("auth");
         if (!auth.isPresent() || auth.get() != "secret") {
@@ -94,7 +96,29 @@ Filters are pretty much like a **RequestHandler** but they don't return anything
       });
     );
 
+Or to create filters that are applied to **all** defined routes, you can use:
+
+    app.beforeAll(
+      (req) -{
+        Optional<String> auth = req.header("auth");
+        if (!auth.isPresent() || auth.get() != "secret") {
+          Context.abort(StatusCode.UNAUTHORIZED);
+        }
+      }
+    );
+
 # Request
+
+**RequestHandlers** and **FilterHandlers** receive a **Request** instance as parameter. This
+object provides methods to retrieve information about the request.
+
+* path() - The request relative path, ie.: '/hello/world/'. All paths are lower case and includes
+  trailing slash.
+* method() - Http method.
+* body() - Request body as String.
+* attribute(String name) - Gets the attribute with the given name.
+* header(String) - Gets the header with the given name.
+* parameter(String) - Gets the parameter with the given name.
 
 # Context
 
@@ -121,4 +145,18 @@ Not Supported Yet!
 
 # Server
 
-Not Supported Yet!
+As said before, it uses **Jetty Server** as embedded web server. For now it isn't supported to
+replace Jetty, neither deploy a **Gasoline** application on any other Container Server.
+
+The **JettyServer** instance can be obtained as follows:
+
+    JettyServer server = app.server();
+    server.onPort(7777).start();
+
+The **JettyServer** instances provides methods to configure some of it's internals settings,
+but we try to set reasonable defaults:
+
+* **Default Port**: 8080
+
+Finally, **GZip** compression support is active.
+

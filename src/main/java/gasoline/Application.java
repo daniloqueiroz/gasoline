@@ -1,14 +1,31 @@
+/**
+ * Gasoline  Copyright (C) 2015  daniloqueiroz.github.io/gasoline
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package gasoline;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
 import gasoline.engine.FilterResolver;
 import gasoline.engine.GasolineEngine;
-import gasoline.engine.Server;
 import gasoline.engine.routing.Route;
 import gasoline.engine.routing.RoutingTable;
+import gasoline.engine.server.JettyServer;
 import gasoline.http.HttpMethod;
 import gasoline.request.Filter;
 import gasoline.request.FilterHandler;
@@ -21,6 +38,7 @@ public class Application {
 
   private final LinkedHashSet<Route> routes = new LinkedHashSet<>();
   private final List<Filter> filters = new LinkedList<>();
+  private final List<FilterHandler> globalFilters = new LinkedList<>();
 
   /**
    * Create an Application with the given modules
@@ -132,11 +150,32 @@ public class Application {
     this.filters.add(new Filter(filter, routes));
   }
 
+  /**
+   * Adds a {@link FilterHandler} to be executed to filter the request
+   * <b>BEFORE</b> the execution of ALL routes.
+   *
+   * <pre>
+   * application.beforeAll((req) -> {
+   *        // TODO do something before the RequestHandler.
+   *    });
+   * </pre>
+   *
+   * @param filter
+   *          The {@link FilterHandler} to filter all requests. As it's a
+   *          functional interface, it can be defined as a lambda function.
+   */
+  public void beforeAll(FilterHandler filter) {
+    this.globalFilters.add(filter);
+  }
+  
   public GasolineEngine engine() {
+    this.globalFilters.forEach(handler -> {
+      this.filters.add(new Filter(handler, new ArrayList<>(this.routes)));
+    });
     return new GasolineEngine(new RoutingTable(this.routes), new FilterResolver(this.filters));
   }
 
-  public Server server() {
-    return new Server();
+  public JettyServer server() {
+    return new JettyServer(this.engine());
   }
 }

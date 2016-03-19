@@ -1,3 +1,19 @@
+/**
+ * Gasoline  Copyright (C) 2015  daniloqueiroz.github.io/gasoline
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package examples.url_shortner;
 
 import static gasoline.Context.badRequest;
@@ -9,15 +25,18 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import gasoline.Application;
 import gasoline.Module;
-import gasoline.utils.Log;
 
 /**
  * @author Danilo Queiroz <dpenna.queiroz@gmail.com>
  */
 public class ShortnerModule implements Module {
 
+  private static final Logger LOG = LoggerFactory.getLogger(ShortnerModule.class);
   private final HashMap<String, ShortUrl> shortUrls = new HashMap<>();
   private final AtomicInteger integer = new AtomicInteger(0);
 
@@ -35,23 +54,22 @@ public class ShortnerModule implements Module {
   @Override
   public void init(Application app) {
     app.before((req) -> {
-      Log.info("Filter!");
-    } ,
+      LOG.info("Filter!");
+    },
+    app.post("/", (req) -> {
+      Optional<String> body = req.body();
+      if (body.isPresent()) {
+        ShortUrlRequest in = fromJson(body.get(), ShortUrlRequest.class);
+        return created(this.addShortUrl(in.url));
+      } else {
+        return badRequest();
+      }
+    }),
 
-        app.post("/", (req) -> {
-          Optional<String> body = req.body();
-          if (body.isPresent()) {
-            ShortUrlRequest in = fromJson(body.get(), ShortUrlRequest.class);
-            return created(this.addShortUrl(in.url));
-          } else {
-            return badRequest();
-          }
-        }),
-
-        app.get("/{short_url}", (req) -> {
-          String shortUrl = req.attribute("short_url");
-          return Optional.ofNullable(this.shortUrls.get(shortUrl));
-        }));
+    app.get("/{short_url}", (req) -> {
+      String shortUrl = req.attribute("short_url");
+      return Optional.ofNullable(this.shortUrls.get(shortUrl));
+    }));
   }
 
   public static class ShortUrl {
