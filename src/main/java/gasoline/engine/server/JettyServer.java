@@ -78,7 +78,6 @@ public class JettyServer {
     server.setHandler(createHandlers());
     try {
       server.start();
-      LOG.info(server.dump());
       server.join();
     } catch (Exception e) {
       LOG.error("Unable to start Jetty Server on port {}", this.port);
