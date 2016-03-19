@@ -18,12 +18,12 @@ package gasoline.engine.server;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.Scanner;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.eclipse.jetty.http.MimeTypes;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -105,7 +105,9 @@ class JettyHandler extends AbstractHandler {
         LOG.error("Output error", e);
       }
     });
-    // TODO set headers
+   for(Map.Entry<String, String> header: response.headers().entrySet()) {
+     servletResponse.setHeader(header.getKey(), header.getValue());
+   }
   }
 
 }

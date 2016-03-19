@@ -16,6 +16,8 @@
  */
 package gasoline.response;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import gasoline.Context;
@@ -24,6 +26,7 @@ import gasoline.http.StatusCode;
 public class Response {
   private final StatusCode code;
   private Optional<String> body;
+  private final HashMap<String, String> headers = new HashMap<>();
 
   public Response(StatusCode code) {
     this(code, null);
@@ -40,6 +43,14 @@ public class Response {
 
   public StatusCode statusCode() {
     return this.code;
+  }
+
+  public void header(String name, String value) {
+    this.headers.put(name, value);
+  }
+
+  public Map<String, String> headers() {
+    return this.headers;
   }
 
   public void prepareBody(Object content) {
