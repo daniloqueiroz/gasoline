@@ -16,8 +16,12 @@
  */
 package gasoline.engine.server;
 
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.gzip.GzipHandler;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,17 +31,20 @@ public class JettyServer {
 
   private static final Logger LOG = LoggerFactory.getLogger(JettyServer.class);
   public static final int DEFAULT_PORT = 8080;
-  /*
-   * TODO list:
-   * jetty server configuration methods
-   * enable http/2
-   * reasonable defaults (threads and io)
-   */
-  private final JettyHandler handler;
+  public static final int DEFAULT_MAX_THREADS = 500;
+  public static final int DEFAULT_OUTPUT_BUFFER_SIZE = 32768;
+  public static final int DEFAULT_HEADERS_SIZE = 8192;
+  private static final int DEFAULT_IDLE_CONNECTION_TIMEOUT = 30000;
+
+  private final GasolineEngine engine;
   private int port = DEFAULT_PORT;
+  private int numThreads = DEFAULT_MAX_THREADS;
+  private int outBufferSize = DEFAULT_OUTPUT_BUFFER_SIZE;
+  private int headersSize = DEFAULT_HEADERS_SIZE;
+  private int connectionTimeout = DEFAULT_IDLE_CONNECTION_TIMEOUT;
 
   public JettyServer(GasolineEngine engine) {
-    this.handler = new JettyHandler(engine);
+    this.engine = engine;
   }
 
   public JettyServer onPort(int port) {
@@ -45,15 +52,33 @@ public class JettyServer {
     return this;
   }
 
+  public JettyServer maxThreads(int numThreads) {
+    this.numThreads = numThreads;
+    return this;
+  }
+
+  public JettyServer outputBufferSize(int size) {
+    this.outBufferSize = size;
+    return this;
+  }
+
+  public JettyServer headersSize(int size) {
+    this.headersSize = size;
+    return this;
+  }
+
+  public JettyServer idleConnectionTimeout(int millis) {
+    this.connectionTimeout = millis;
+    return this;
+  }
+
   public void start() {
     LOG.info("Starting Jetty Server on port {}", this.port);
     Server server = this.createServer();
+    server.setHandler(createHandlers());
     try {
-      GzipHandler gzip = new GzipHandler();
-      gzip.setHandler(this.handler);
-      server.setHandler(gzip);
-      server.dump();
       server.start();
+      LOG.info(server.dump());
       server.join();
     } catch (Exception e) {
       LOG.error("Unable to start Jetty Server on port {}", this.port);
@@ -61,7 +86,26 @@ public class JettyServer {
     }
   }
 
+  private GzipHandler createHandlers() {
+    GzipHandler gzip = new GzipHandler();
+    gzip.setHandler(new JettyHandler(this.engine));
+    return gzip;
+  }
+
   private Server createServer() {
-    return new Server(this.port);
+    Server server = new Server(new QueuedThreadPool(this.numThreads));
+
+    HttpConfiguration httpConfig = new HttpConfiguration();
+    httpConfig.setOutputBufferSize(this.outBufferSize);
+    httpConfig.setRequestHeaderSize(this.headersSize);
+    httpConfig.setResponseHeaderSize(this.headersSize);
+    httpConfig.setSendServerVersion(true);
+    httpConfig.setSendDateHeader(false);
+    ServerConnector http = new ServerConnector(server, new HttpConnectionFactory(httpConfig));
+    http.setPort(this.port);
+    http.setIdleTimeout(this.connectionTimeout);
+    server.addConnector(http);
+
+    return server;
   }
 }
