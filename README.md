@@ -11,7 +11,7 @@ and Log support is build using **SLF4J**.
 As it was built with REST API in mind, it only support *JSon* data, using [**GSon**](https://github.com/google/gson) 
 library.
 
-Other dependencies includes **Jetty**, as *HTTP/2* server. And that's all!
+Other dependencies includes **Jetty**, as *HTTP* server and **SLF4J**. And that's all!
 
 Finally, gasoline is under LGPLv3 license.
 
@@ -108,6 +108,17 @@ Or to create filters that are applied to **all** defined routes, you can use:
     );
 
 # Request
+
+**RequestHandlers** and **FilterHandlers** receive a **Request** instance as parameter. This
+object provides methods to retrieve information about the request.
+
+* path() - The request relative path, ie.: '/hello/world/'. All paths are lower case and includes
+  trailing slash.
+* method() - Http method.
+* body() - Request body as String.
+* attribute(String name) - Gets the attribute with the given name.
+* header(String) - Gets the header with the given name.
+* parameter(String) - Gets the parameter with the given name.
 
 # Context
 

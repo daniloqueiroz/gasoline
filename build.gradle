@@ -2,13 +2,14 @@ plugins {
   id 'java'
   id 'eclipse'
   id 'idea'
+  id 'maven-publish'
   
   // community plugins
   id 'com.github.ben-manes.versions' version '0.12.0'
   id 'com.github.hierynomus.license' version '0.11.0'
 }
 
-version = '0.1.0'
+version = '1.0.0'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
@@ -35,6 +36,18 @@ dependencies {
   runtime (
     'org.slf4j:slf4j-simple:1.7.19'
   )
+}
+
+publishing {
+  publications {
+    maven(MavenPublication) {
+      groupId 'co.cliix'
+      artifactId 'gasoline'
+      version "${version}"
+
+      from components.java
+    }
+  }
 }
 
 license {
