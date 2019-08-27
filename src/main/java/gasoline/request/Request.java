@@ -16,6 +16,8 @@
  */
 package gasoline.request;
 
+import static java.lang.String.format;
+
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -78,5 +80,11 @@ public class Request {
 
   public void parameter(String name, String value) {
     this.parameters.put(name, value);
+  }
+
+  @Override
+  public String toString() {
+    String body = this.body().isPresent()? this.body().get()  :"EMPTY BODY";
+    return format("[%s %s:  %s]", this.method, this.path, body);
   }
 }

@@ -106,4 +106,19 @@ public class RoutingTableTest {
 
     assertThat(route).containsSame(originalRoute);
   }
+
+  @Test
+  public void find_samePathMultipleMethods_returnRoute() {
+    Route route1 = new Route("/tests/{name}", HttpMethod.GET, (req) -> {
+      return null;
+    });
+    Route route2 = new Route("/tests/{name}", HttpMethod.POST, (req) -> {
+      return null;
+    });
+
+    RoutingTable router = new RoutingTable(asList(route1, route2));
+    Optional<Route> route = router.findRouteFor("/tests/danilo", HttpMethod.GET);
+
+    assertThat(route).containsSame(route1);
+  }
 }

@@ -17,7 +17,9 @@
 package gasoline.engine.routing;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import gasoline.http.HttpMethod;
@@ -36,7 +38,7 @@ public class PathTrie {
   private class TrieNode {
     Map<String, TrieNode> children = new HashMap<>();
     String token;
-    Route route;
+    final Collection<Route> routes = new LinkedList<>();
 
     public TrieNode(String token) {
       this.token = token;
@@ -44,7 +46,7 @@ public class PathTrie {
 
     @Override
     public String toString() {
-      return "TrieNode [token=" + this.token + ", route=" + this.route + ", children=" + this.children + "]";
+      return "TrieNode [token=" + this.token + ", route=" + this.routes + ", children=" + this.children + "]";
     }
   }
 
@@ -71,7 +73,7 @@ public class PathTrie {
       node = child;
     }
 
-    node.route = route;
+    node.routes.add(route);
   }
 
   /**
@@ -84,16 +86,19 @@ public class PathTrie {
       for (Map.Entry<String, TrieNode> entry : node.children.entrySet()) {
         TrieNode current = entry.getValue();
         if (token.matches(entry.getKey())) {
-          if (current.route == null || current.route.method == method) {
+          for(Route r : current.routes) {
+            if ( r.method == method) {
+              result = r;
+              break;
+            }
+          }
+          if (result != null) {
             node = entry.getValue();
-            break;
           }
         }
       }
-      result = node.route;
     }
     return result;
-
   }
 
   private String[] getTokens(String path) {
